@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# MIT License
+# Copyright (c) 2020 Jack Rayner <me@jrayner.net>
+
 import iterm2
 from subprocess import Popen, PIPE
 
@@ -16,7 +19,7 @@ applescript = '''if application "Spotify" is running and application "Podcasts" 
 			if player state is paused then
 				set state to "paused"
 			end if
-			
+
 			set display to state & ";" & track_name & ";" & track_artist & ";" & (round ((seconds_played * 1000 / track_duration) * 100))
 		end if
 	end tell
