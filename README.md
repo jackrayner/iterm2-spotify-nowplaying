@@ -20,12 +20,11 @@ ln -s ./now-playing.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/
 
 ## Features
 
-- Playing/Paused indicator
+- Information refresh every 5 seconds.
+- Track name, artist and progress (%) information.
+- Playing/Paused indicator.
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/playing_full.png "Status Bar")
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/paused_full.png "Status Bar")
-- Trackname
-- Artist
-- Track progress
 - Application/Integration Status
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/spotify_closed.png "Status Bar")
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/not_enabled.png "Status Bar")
@@ -34,3 +33,11 @@ ln -s ./now-playing.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_1.png "Status Bar")
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_2.png "Status Bar")
   - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_3.png "Status Bar")
+
+## TODO - Future improvements
+
+- Customisable refresh interval.
+- Improved error handling(?).
+- Investigate replacement of calling `osascript` to get track information.
+- Travis CI testing.
+- Scrolling text.
