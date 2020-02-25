@@ -43,10 +43,10 @@ def check_spotify():
 async def main(connection):
     # Define the configuration knobs:
     vl = "spotify_current_track"
-    knobs = [iterm2.CheckboxKnob("Spotify Current Track", False, vl)]
+    knobs = [iterm2.CheckboxKnob("Enable Spotify Track Info", False, vl)]
     component = iterm2.StatusBarComponent(
         short_description="Spotify Current Track",
-        detailed_description="Displays the currently playing track from Spotify",
+        detailed_description="Displays the currently playing track information from Spotify",
         knobs=knobs,
         exemplar="♬ Black Betty - Spiderbait (4%)",
         update_cadence=5,
