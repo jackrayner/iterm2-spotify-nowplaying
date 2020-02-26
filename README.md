@@ -41,3 +41,5 @@ ln -s ./now-playing.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/
 - Investigate replacement of calling `osascript` to get track information.
 - Travis CI testing.
 - Scrolling text.
+- Click to open Spotify.
+- Add track to saved songs.
