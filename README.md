@@ -15,7 +15,7 @@ _Enables Spotify track information in the iTerm2 status bar._
 git clone https://github.com/jackrayner/iterm2-spotify-nowplaying.git
 cd iterm2-spotify-nowplaying
 mkdir -p ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
-ln -s ./now-playing.py ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/now-playing.py
+ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/now-playing.py
 ```
 
 ## Features
