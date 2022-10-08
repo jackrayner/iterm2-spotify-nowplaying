@@ -2,7 +2,7 @@
 
 _Enables Spotify track information in the iTerm2 status bar._
 
-![Main Window](https://s3.jrayner.net/iterm2-spotify-nowplaying/main_window.png "Main Window")
+![Main Window](/img/main_window.png "Main Window")
 
 ## Prerequisites
 
@@ -23,16 +23,16 @@ ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/Auto
 - Information refresh every 5 seconds.
 - Track name, artist and progress (%) information.
 - Playing/Paused indicator.
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/playing_full.png "Status Bar")
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/paused_full.png "Status Bar")
+  - ![Status Bar](/img/playing_full.png "Status Bar")
+  - ![Status Bar](/img/paused_full.png "Status Bar")
 - Application/Integration Status
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/spotify_closed.png "Status Bar")
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/not_enabled.png "Status Bar")
+  - ![Status Bar](/img/spotify_closed.png "Status Bar")
+  - ![Status Bar](/img/not_enabled.png "Status Bar")
 - Multiple sizes
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/playing_full.png "Status Bar")
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_1.png "Status Bar")
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_2.png "Status Bar")
-  - ![Status Bar](https://s3.jrayner.net/iterm2-spotify-nowplaying/reduced_3.png "Status Bar")
+  - ![Status Bar](/img/playing_full.png "Status Bar")
+  - ![Status Bar](/img/reduced_1.png "Status Bar")
+  - ![Status Bar](/img/reduced_2.png "Status Bar")
+  - ![Status Bar](/img/reduced_3.png "Status Bar")
 
 ## TODO - Future improvements
 
