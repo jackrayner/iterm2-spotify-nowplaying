@@ -10,8 +10,12 @@ _Enables Spotify track information in the iTerm2 status bar._
 
 ## Features
 
-- Information refresh every 5 seconds.
+- Information refresh every 5 seconds by default -- configurable in the
+  status bar component's settings.
 - Track name, artist and progress (%) information.
+- Long track/artist names scroll to fit the available space (can be
+  disabled in settings).
+- Click the status bar item to bring Spotify to the front.
 - Playing/Paused indicator.
   - ![Status Bar](/img/playing_full.png "Status Bar")
   - ![Status Bar](/img/paused_full.png "Status Bar")
