@@ -56,3 +56,18 @@ Ideas not yet implemented, kept here for reference:
   library" verb, so this needs the Spotify Web API with OAuth and token
   storage -- turning a read-only status widget into an authenticated
   read-write client. A bigger scope change than the rest of this list.
+
+## Already tried and abandoned
+
+- Scrolling/marquee text for long track/artist names. Implemented and
+  iterated on across several PRs, but never rendered reliably: the status
+  bar RPC only returns candidate strings for iTerm2 to pick from ("the
+  longest one that fits"), with no control over pixel-level layout. In a
+  proportional-width font, the rendered width of same-length scrolled
+  substrings wobbles tick to tick, which caused tier selection to flicker
+  (blank renders, snapping to a shorter/different string, right-edge
+  blanking) in ways that were hard to fully diagnose without deeper access
+  to iTerm2's native rendering internals. Reverted in favour of the
+  original static field-dropping degradation (drop artist, then progress,
+  then name). If revisited, it'd need either pixel-stable candidate widths
+  or a different rendering mechanism entirely, not just further tuning.
