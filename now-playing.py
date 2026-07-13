@@ -112,16 +112,38 @@ async def main(connection):
             return [ f"✖️ {status_messages[track[0]]}", "✖️" ]
 
         icon, name, artist, percent = track
-        title = f"{name} - {artist}"
-        if knobs.get(scroll_key, True) and len(title) > SCROLL_WIDTH:
+        combined = f"{name} - {artist}"
+        scroll_enabled = knobs.get(scroll_key, True)
+        if scroll_enabled:
             state["scroll_offset"] += 1
-            title = scroll_text(title, SCROLL_WIDTH, state["scroll_offset"])
+        offset = state["scroll_offset"]
 
-        return [ f"{icon} {title} ({percent}%)",
-                "{0} {1} ({3}%)".format(*track),
-                "{} {}".format(*track),
-                "{}".format(*track)
+        def scrolled(text, width):
+            if scroll_enabled and len(text) > width:
+                return scroll_text(text, width, offset)
+            return text
+
+        # iTerm2 shows "the longest candidate that fits" the space actually
+        # available. A sparse set of options (as this used to be) leaves gaps
+        # where nothing fits and the component renders blank, so this is a
+        # denser gradient -- and every text-bearing tier uses the scrolling
+        # window (not just the widest one), so scrolling stays visible as the
+        # status bar narrows instead of disappearing along with tier 1.
+        tiers = [
+            (combined, SCROLL_WIDTH, True),
+            (combined, 20, True),
+            (name, 20, True),
+            (name, 12, True),
+            (name, 12, False),
+            (name, 6, False),
         ]
+        candidates = [
+            f"{icon} {scrolled(text, width)} ({percent}%)" if show_percent
+            else f"{icon} {scrolled(text, width)}"
+            for text, width, show_percent in tiers
+        ]
+        candidates.append(icon)
+        return candidates
 
     @iterm2.RPC
     async def on_click(session_id):
