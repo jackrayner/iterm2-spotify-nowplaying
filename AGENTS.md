@@ -52,11 +52,18 @@ ruff check .
   stubs it out in `sys.modules` before loading the script (see
   `tests/test_now_playing.py`). Never add `iterm2` to a requirements file.
 - The AppleScript in `applescript` is fragile, string-templated shell
-  content that emits semicolon-delimited fields (`state;name;artist;percent`
-  or `closed;;;`). If you change its output shape, you must update
-  `check_spotify()`'s parsing (the `.split(";")` and index-based lookups)
-  and the `coro` formatting strings (`"{0} {1} - {2} ({3}%)"` etc.) in the
-  same change, or the status bar will silently show garbage.
+  content that emits four fields delimited by `\x1e` (ASCII record
+  separator, chosen because it can't appear in Spotify track/artist
+  metadata -- a literal `;` in a track name used to corrupt parsing when
+  `;` was the delimiter). The first field is one of `playing`, `paused`,
+  `stopped` (Spotify running with no track loaded), `closed` (Spotify not
+  running, or Podcasts is running), or `error` (non-zero `osascript` exit,
+  synthesized by `check_spotify()` itself rather than the AppleScript). If
+  you change the output shape, you must update `check_spotify()`'s parsing
+  (the `.split("\x1e")` and index-based lookups), the `coro`
+  `status_messages` dict, and the `coro` formatting strings
+  (`"{0} {1} - {2} ({3}%)"` etc.) in the same change, or the status bar will
+  silently show garbage or raise an `IndexError`.
 - `check_spotify()` is the only synchronous, `iterm2`-independent logic, and
   therefore the only thing unit-tested. `main()`/`coro`/the
   `iterm2.StatusBarComponent` registration require a real iTerm2 process and

@@ -7,10 +7,11 @@ from subprocess import PIPE, Popen
 
 import iterm2
 
-applescript = '''if application "Spotify" is running and application "Podcasts" is not running then
+applescript = '''set fs to ASCII character 30
+if application "Spotify" is running and application "Podcasts" is not running then
 	tell application "Spotify"
 		if player state is stopped then
-			set display to "No Track Playing"
+			set display to "stopped" & fs & fs & fs
 		else
 			set track_artist to artist of current track
 			set track_name to name of current track
@@ -21,26 +22,29 @@ applescript = '''if application "Spotify" is running and application "Podcasts" 
 				set state to "paused"
 			end if
 
-			set display to state & ";" & track_name & ";" & track_artist & ";" & ¬
+			set display to state & fs & track_name & fs & track_artist & fs & ¬
 				(round ((seconds_played * 1000 / track_duration) * 100))
 		end if
 	end tell
 else
-	set display to "closed;;;"
+	set display to "closed" & fs & fs & fs
 end if'''
 
 def check_spotify():
     p = Popen(['osascript', '-'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
     stdout, stderr = p.communicate(applescript.encode('utf-8'))
-    if p.returncode == 0:
-        output = stdout.decode('utf-8').strip().split(";")
-        if output[0] == "playing":
-            output[0] = "♬"
-        elif output[0] == "paused":
-            output[0] = "☉"
-        return output
-    else:
-        return "error"
+    if p.returncode != 0:
+        return ["error", "", "", "0"]
+
+    # Only strip the trailing newline: `\x1e` is classified as whitespace by
+    # str.isspace(), so a bare .strip() would also eat empty leading/trailing
+    # fields (e.g. the "closed"/"stopped" cases).
+    output = stdout.decode('utf-8').rstrip("\n").split("\x1e")
+    if output[0] == "playing":
+        output[0] = "♬"
+    elif output[0] == "paused":
+        output[0] = "☉"
+    return output
 
 async def main(connection):
     # Define the configuration knobs:
@@ -59,12 +63,18 @@ async def main(connection):
     # References specify paths to external variables (like rows) and binds them to
     # arguments to the registered function (coro). When any of those variables' values
     # change the function gets called.
+    status_messages = {
+        "closed": "Spotify Closed",
+        "stopped": "No Track Playing",
+        "error": "Error",
+    }
+
     @iterm2.StatusBarRPC
     async def coro(knobs):
         if vl in knobs and knobs[vl]:
             track = check_spotify()
-            if track[0] == "closed":
-                return [ "✖️ Spotify Closed", "✖️" ]
+            if track[0] in status_messages:
+                return [ f"✖️ {status_messages[track[0]]}", "✖️" ]
             else:
                 return [ "{} {} - {} ({}%)".format(*track),
                         "{0} {1} ({3}%)".format(*track),

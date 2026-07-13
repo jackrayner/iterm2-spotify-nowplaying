@@ -52,7 +52,7 @@ def _mock_popen(stdout: bytes, returncode: int = 0):
 
 
 def test_check_spotify_playing():
-    stdout = b"playing;Black Betty;Spiderbait;4\n"
+    stdout = b"playing\x1eBlack Betty\x1eSpiderbait\x1e4\n"
     with patch.object(now_playing, "Popen", return_value=_mock_popen(stdout)):
         result = now_playing.check_spotify()
 
@@ -60,7 +60,7 @@ def test_check_spotify_playing():
 
 
 def test_check_spotify_paused():
-    stdout = b"paused;Black Betty;Spiderbait;4\n"
+    stdout = b"paused\x1eBlack Betty\x1eSpiderbait\x1e4\n"
     with patch.object(now_playing, "Popen", return_value=_mock_popen(stdout)):
         result = now_playing.check_spotify()
 
@@ -68,10 +68,20 @@ def test_check_spotify_paused():
 
 
 def test_check_spotify_closed():
-    with patch.object(now_playing, "Popen", return_value=_mock_popen(b"closed;;;\n")):
+    stdout = b"closed\x1e\x1e\x1e\n"
+    with patch.object(now_playing, "Popen", return_value=_mock_popen(stdout)):
         result = now_playing.check_spotify()
 
     assert result == ["closed", "", "", ""]
+
+
+def test_check_spotify_stopped():
+    """Spotify is running but has no track loaded (e.g. never played anything)."""
+    stdout = b"stopped\x1e\x1e\x1e\n"
+    with patch.object(now_playing, "Popen", return_value=_mock_popen(stdout)):
+        result = now_playing.check_spotify()
+
+    assert result == ["stopped", "", "", ""]
 
 
 def test_check_spotify_error_on_nonzero_returncode():
@@ -80,4 +90,17 @@ def test_check_spotify_error_on_nonzero_returncode():
     ):
         result = now_playing.check_spotify()
 
-    assert result == "error"
+    assert result == ["error", "", "", "0"]
+
+
+def test_check_spotify_track_name_containing_semicolon():
+    """A literal ';' in a track/artist name must not corrupt field parsing.
+
+    The old ';'-delimited format broke on this; the record-separator
+    delimiter (0x1e) can't appear in Spotify metadata.
+    """
+    stdout = b"playing\x1eRock; Roll\x1eArtist\x1e50\n"
+    with patch.object(now_playing, "Popen", return_value=_mock_popen(stdout)):
+        result = now_playing.check_spotify()
+
+    assert result == ["♬", "Rock; Roll", "Artist", "50"]
