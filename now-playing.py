@@ -9,7 +9,7 @@ from subprocess import PIPE, Popen
 import iterm2
 
 DEFAULT_REFRESH_INTERVAL = 5.0
-TICK_SECONDS = 1.0
+TICK_SECONDS = 0.2
 SCROLL_WIDTH = 30
 
 applescript = '''set fs to ASCII character 30
