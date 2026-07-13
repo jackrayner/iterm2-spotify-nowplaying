@@ -104,25 +104,3 @@ def test_check_spotify_track_name_containing_semicolon():
         result = now_playing.check_spotify()
 
     assert result == ["♬", "Rock; Roll", "Artist", "50"]
-
-
-def test_scroll_text_returns_input_unchanged_when_it_fits():
-    assert now_playing.scroll_text("Black Betty - Spiderbait", 30, 0) == "Black Betty - Spiderbait"
-
-
-def test_scroll_text_windows_long_text():
-    text = "Bohemian Rhapsody - Queen"
-    assert now_playing.scroll_text(text, 10, 0) == text[:10]
-
-
-def test_scroll_text_advances_with_offset():
-    text = "Bohemian Rhapsody - Queen"
-    assert now_playing.scroll_text(text, 10, 1) == text[1:11]
-
-
-def test_scroll_text_wraps_around():
-    text = "Bohemian Rhapsody - Queen"
-    padded = text + "   "
-    doubled = padded + padded
-    offset = len(padded) + 3
-    assert now_playing.scroll_text(text, 10, offset) == doubled[3:13]

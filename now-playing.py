@@ -9,9 +9,7 @@ from subprocess import PIPE, Popen
 import iterm2
 
 DEFAULT_REFRESH_INTERVAL = 5.0
-TICK_SECONDS = 0.1
-DEFAULT_SCROLL_SPEED = 0.25
-SCROLL_WIDTH = 30
+TICK_SECONDS = 1.0
 
 applescript = '''set fs to ASCII character 30
 if application "Spotify" is running and application "Podcasts" is not running then
@@ -52,30 +50,14 @@ def check_spotify():
         output[0] = "☉"
     return output
 
-def scroll_text(text, width, offset):
-    """Return a `width`-wide window into `text`, wrapping around as `offset` advances."""
-    if len(text) <= width:
-        return text
-    # Pad with a gap so the wrap-around doesn't run the end straight into the start.
-    padded = text + "   "
-    doubled = padded + padded
-    start = offset % len(padded)
-    return doubled[start:start + width]
-
 async def main(connection):
     # Define the configuration knobs:
     vl = "spotify_current_track"
     refresh_key = "spotify_refresh_interval"
-    scroll_key = "spotify_scroll_text"
-    scroll_speed_key = "spotify_scroll_speed"
     knobs = [
         iterm2.CheckboxKnob("Enable Spotify Track Info", False, vl),
         iterm2.PositiveFloatingPointKnob(
             "Refresh Interval (seconds)", DEFAULT_REFRESH_INTERVAL, refresh_key),
-        iterm2.CheckboxKnob(
-            "Scroll long track/artist names", True, scroll_key),
-        iterm2.PositiveFloatingPointKnob(
-            "Scroll Speed (seconds per character)", DEFAULT_SCROLL_SPEED, scroll_speed_key),
     ]
     component = iterm2.StatusBarComponent(
         short_description="Spotify Current Track",
@@ -83,9 +65,8 @@ async def main(connection):
         knobs=knobs,
         exemplar="♬ Black Betty - Spiderbait (4%)",
         # A fixed, short tick: it's the redraw granularity, not the actual
-        # rate of anything. check_spotify() only re-runs once per the
-        # knob-configurable refresh interval, and the scroll window only
-        # advances once per the knob-configurable scroll speed, both below.
+        # refresh rate -- check_spotify() only re-runs once per the
+        # knob-configurable refresh interval, below.
         update_cadence=TICK_SECONDS,
         identifier="com.iterm2.jackrayner.spotify-current-track")
 
@@ -99,12 +80,7 @@ async def main(connection):
         "stopped": "No Track Playing",
         "error": "Error",
     }
-    state = {
-        "track": None,
-        "last_check": 0.0,
-        "scroll_offset": 0,
-        "last_scroll_advance": 0.0,
-    }
+    state = {"track": None, "last_check": 0.0}
 
     @iterm2.StatusBarRPC
     async def coro(knobs):
@@ -121,41 +97,11 @@ async def main(connection):
         if track[0] in status_messages:
             return [ f"✖️ {status_messages[track[0]]}", "✖️" ]
 
-        icon, name, artist, percent = track
-        combined = f"{name} - {artist}"
-        scroll_enabled = knobs.get(scroll_key, True)
-        scroll_speed = knobs.get(scroll_speed_key, DEFAULT_SCROLL_SPEED)
-        if scroll_enabled and now - state["last_scroll_advance"] >= scroll_speed:
-            state["scroll_offset"] += 1
-            state["last_scroll_advance"] = now
-        offset = state["scroll_offset"]
-
-        def scrolled(text, width):
-            if scroll_enabled and len(text) > width:
-                return scroll_text(text, width, offset)
-            return text
-
-        # iTerm2 shows "the longest candidate that fits" the space actually
-        # available. A sparse set of options (as this used to be) leaves gaps
-        # where nothing fits and the component renders blank, so this is a
-        # denser gradient -- and every text-bearing tier uses the scrolling
-        # window (not just the widest one), so scrolling stays visible as the
-        # status bar narrows instead of disappearing along with tier 1.
-        tiers = [
-            (combined, SCROLL_WIDTH, True),
-            (combined, 20, True),
-            (name, 20, True),
-            (name, 12, True),
-            (name, 12, False),
-            (name, 6, False),
+        return [ "{} {} - {} ({}%)".format(*track),
+                "{0} {1} ({3}%)".format(*track),
+                "{} {}".format(*track),
+                "{}".format(*track)
         ]
-        candidates = [
-            f"{icon} {scrolled(text, width)} ({percent}%)" if show_percent
-            else f"{icon} {scrolled(text, width)}"
-            for text, width, show_percent in tiers
-        ]
-        candidates.append(icon)
-        return candidates
 
     @iterm2.RPC
     async def on_click(session_id):
