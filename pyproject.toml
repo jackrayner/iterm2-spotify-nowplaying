@@ -1,0 +1,16 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = "."
+
+[tool.coverage.run]
+# now-playing.py is loaded by path (see tests/test_now_playing.py), not
+# `import`ed under a dotted name, so pytest-cov's module-name-based --cov
+# lookup can't find it; --cov=. (directory/path tracking) is used instead,
+# with everything except the script itself omitted from the report.
+omit = ["tests/*", ".venv/*"]
