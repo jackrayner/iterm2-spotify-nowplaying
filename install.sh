@@ -25,4 +25,38 @@ else
     echo "Installed now-playing.py -> $TARGET"
 fi
 
+API_SERVER_DOMAIN="com.googlecode.iterm2"
+API_SERVER_KEY="EnableAPIServer"
+
+print_enable_api_hint() {
+    echo "Enable it in iTerm2 Preferences > General > Magic, or run:"
+    echo "  defaults write $API_SERVER_DOMAIN $API_SERVER_KEY -bool true"
+}
+
+api_enabled=$(defaults read "$API_SERVER_DOMAIN" "$API_SERVER_KEY" 2>/dev/null || echo "0")
+
+if [ "$api_enabled" = "1" ]; then
+    echo "iTerm2's Python API is already enabled."
+elif { exec 3<>/dev/tty; } 2>/dev/null; then
+    # now-playing.py needs iTerm2's Python API to run at all, but it's off
+    # by default; /dev/tty lets this prompt work even when this script is
+    # itself being fed to bash over stdin (curl | bash).
+    printf "iTerm2's Python API is disabled, but is required for this script to run. Enable it now? [y/N] " >&3
+    read -r reply <&3
+    exec 3<&-
+    case "$reply" in
+        [Yy]*)
+            defaults write "$API_SERVER_DOMAIN" "$API_SERVER_KEY" -bool true
+            echo "Enabled iTerm2's Python API."
+            ;;
+        *)
+            echo "Skipped enabling iTerm2's Python API."
+            print_enable_api_hint
+            ;;
+    esac
+else
+    echo "iTerm2's Python API is disabled and no terminal is available to prompt."
+    print_enable_api_hint
+fi
+
 echo "Restart iTerm2 to load the script."
