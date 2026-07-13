@@ -35,7 +35,9 @@ _Enables Spotify track information in the iTerm2 status bar._
 curl -fsSL https://raw.githubusercontent.com/jackrayner/iterm2-spotify-nowplaying/main/install.sh | bash
 ```
 
-Then restart iTerm2 to load the script.
+If iTerm2's Python API is disabled, the script will offer to enable it for
+you (it's required for `now-playing.py` to run at all). Then restart iTerm2
+to load the script.
 
 If you'd rather review the script first, or you're working from a clone
 (e.g. for development), run it locally instead -- it'll symlink

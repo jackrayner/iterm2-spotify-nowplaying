@@ -42,7 +42,12 @@ ruff check .
   template string sent to `osascript`), `check_spotify()` (runs it and
   parses the result), and `main()`/`coro` (the `iterm2` status-bar
   registration and formatting logic).
+- `install.sh` -- installs `now-playing.py` into iTerm2's AutoLaunch
+  folder (symlinking it when run from a clone, downloading it otherwise)
+  and offers to enable iTerm2's Python API if it's off.
 - `tests/test_now_playing.py` -- unit tests for `check_spotify()` only.
+- `tests/test_install_sh.py` -- runs `install.sh` under `bash` against a
+  fake `$HOME`, with `curl`/`defaults` stubbed out on `PATH`.
 - `img/` -- screenshots used in README.md.
 
 ## Conventions
