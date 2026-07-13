@@ -1,22 +1,12 @@
 # Spotify Track Info for iTerm2 Status Bar
 
+[![Lint](https://github.com/jackrayner/iterm2-spotify-nowplaying/actions/workflows/lint.yml/badge.svg)](https://github.com/jackrayner/iterm2-spotify-nowplaying/actions/workflows/lint.yml)
+[![Test](https://github.com/jackrayner/iterm2-spotify-nowplaying/actions/workflows/test.yml/badge.svg)](https://github.com/jackrayner/iterm2-spotify-nowplaying/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 _Enables Spotify track information in the iTerm2 status bar._
 
 ![Main Window](/img/main_window.png "Main Window")
-
-## Prerequisites
-
-- iTerm2
-- iTerm2 Python Runtime (Will be installed on first launch after installation)
-
-## Installation
-
-```
-git clone https://github.com/jackrayner/iterm2-spotify-nowplaying.git
-cd iterm2-spotify-nowplaying
-mkdir -p ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
-ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/now-playing.py
-```
 
 ## Features
 
@@ -34,12 +24,25 @@ ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/Auto
   - ![Status Bar](/img/reduced_2.png "Status Bar")
   - ![Status Bar](/img/reduced_3.png "Status Bar")
 
-## TODO - Future improvements
+## Requirements
 
-- Customisable refresh interval.
-- Improved error handling(?).
-- Investigate replacement of calling `osascript` to get track information.
-- Travis CI testing.
-- Scrolling text.
-- Click to open Spotify.
-- Add track to saved songs.
+- iTerm2
+- iTerm2 Python Runtime (will be installed on first launch after installation)
+
+## Installation
+
+```sh
+git clone https://github.com/jackrayner/iterm2-spotify-nowplaying.git
+cd iterm2-spotify-nowplaying
+mkdir -p ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
+ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/now-playing.py
+```
+
+## Development
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, running tests,
+linting, and a list of planned future improvements.
+
+## License
+
+[MIT](LICENSE)

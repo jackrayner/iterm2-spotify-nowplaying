@@ -3,8 +3,9 @@
 # MIT License
 # Copyright (c) 2020 Jack Rayner <me@jrayner.net>
 
+from subprocess import PIPE, Popen
+
 import iterm2
-from subprocess import Popen, PIPE
 
 applescript = '''if application "Spotify" is running and application "Podcasts" is not running then
 	tell application "Spotify"
@@ -20,7 +21,8 @@ applescript = '''if application "Spotify" is running and application "Podcasts" 
 				set state to "paused"
 			end if
 
-			set display to state & ";" & track_name & ";" & track_artist & ";" & (round ((seconds_played * 1000 / track_duration) * 100))
+			set display to state & ";" & track_name & ";" & track_artist & ";" & ¬
+				(round ((seconds_played * 1000 / track_duration) * 100))
 		end if
 	end tell
 else
@@ -60,14 +62,14 @@ async def main(connection):
     @iterm2.StatusBarRPC
     async def coro(knobs):
         if vl in knobs and knobs[vl]:
-            l = check_spotify()
-            if l[0] == "closed":
+            track = check_spotify()
+            if track[0] == "closed":
                 return [ "✖️ Spotify Closed", "✖️" ]
             else:
-                return [ "{0} {1} - {2} ({3}%)".format(*l),
-                        "{0} {1} ({3}%)".format(*l),
-                        "{0} {1}".format(*l),
-                        "{0}".format(*l)
+                return [ "{} {} - {} ({}%)".format(*track),
+                        "{0} {1} ({3}%)".format(*track),
+                        "{} {}".format(*track),
+                        "{}".format(*track)
                 ]
         return "✖️ Not Enabled"
 
