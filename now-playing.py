@@ -136,23 +136,26 @@ async def main(connection):
             return text
 
         # iTerm2 shows "the longest candidate that fits" the space actually
-        # available. A sparse set of options (as this used to be) leaves gaps
-        # where nothing fits and the component renders blank, so this is a
-        # denser gradient -- and every text-bearing tier uses the scrolling
-        # window (not just the widest one), so scrolling stays visible as the
-        # status bar narrows instead of disappearing along with tier 1.
+        # available, measured in rendered (proportional-font) pixel width --
+        # which wobbles slightly from tick to tick purely because the visible
+        # scrolled characters differ, even though the string length doesn't.
+        # Every tier must scroll the *same* underlying text (just narrower
+        # windows of it), or that wobble crossing a tier boundary swaps in a
+        # different, shorter string and looks like a snap/glitch rather than
+        # a smooth narrowing. A sparse set of widths (as this used to be)
+        # also leaves gaps where nothing fits and the component renders
+        # blank, hence the dense gradient here.
         tiers = [
-            (combined, SCROLL_WIDTH, True),
-            (combined, 20, True),
-            (name, 20, True),
-            (name, 12, True),
-            (name, 12, False),
-            (name, 6, False),
+            (SCROLL_WIDTH, True),
+            (20, True),
+            (14, True),
+            (14, False),
+            (8, False),
         ]
         candidates = [
-            f"{icon} {scrolled(text, width)} ({percent}%)" if show_percent
-            else f"{icon} {scrolled(text, width)}"
-            for text, width, show_percent in tiers
+            f"{icon} {scrolled(combined, width)} ({percent}%)" if show_percent
+            else f"{icon} {scrolled(combined, width)}"
+            for width, show_percent in tiers
         ]
         candidates.append(icon)
         return candidates
