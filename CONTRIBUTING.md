@@ -46,9 +46,13 @@ ruff check .
 
 Ideas not yet implemented, kept here for reference:
 
-- Customisable refresh interval.
-- Improved error handling(?).
 - Investigate replacement of calling `osascript` to get track information.
-- Scrolling text.
-- Click to open Spotify.
-- Add track to saved songs.
+  Alternatives (Spotify's distributed notifications, MediaRemote, the Web
+  API) all trade the current zero-dependency simplicity for `pyobjc` or
+  OAuth/network complexity inside a Python runtime whose packaging you don't
+  control (see AGENTS.md). Only worth it if `osascript`'s latency/CPU cost
+  becomes an actual problem.
+- Add track to saved songs. Spotify's AppleScript dictionary has no "save to
+  library" verb, so this needs the Spotify Web API with OAuth and token
+  storage -- turning a read-only status widget into an authenticated
+  read-write client. A bigger scope change than the rest of this list.
