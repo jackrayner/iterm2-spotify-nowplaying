@@ -23,9 +23,9 @@ Tests cover `check_spotify()` by mocking `subprocess.Popen`. Manual
 end-to-end testing of the status-bar component itself (the `iterm2`
 registration, live formatting, refresh cadence, etc.) requires an actual
 iTerm2 + Spotify installation, since the `iterm2` runtime and Spotify's
-AppleScript integration can't be exercised in CI. To test manually, symlink
-the script into iTerm2's AutoLaunch folder as described in the README and
-restart iTerm2.
+AppleScript integration can't be exercised in CI. To test manually, run `./install.sh`
+from your clone (it symlinks the script into iTerm2's AutoLaunch folder so
+local edits take effect immediately) and restart iTerm2.
 
 ## Linting
 
