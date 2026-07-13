@@ -32,10 +32,19 @@ _Enables Spotify track information in the iTerm2 status bar._
 ## Installation
 
 ```sh
+curl -fsSL https://raw.githubusercontent.com/jackrayner/iterm2-spotify-nowplaying/main/install.sh | bash
+```
+
+Then restart iTerm2 to load the script.
+
+If you'd rather review the script first, or you're working from a clone
+(e.g. for development), run it locally instead -- it'll symlink
+`now-playing.py` so `git pull` keeps it up to date:
+
+```sh
 git clone https://github.com/jackrayner/iterm2-spotify-nowplaying.git
 cd iterm2-spotify-nowplaying
-mkdir -p ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch
-ln -s "${PWD}/now-playing.py" ~/Library/Application\ Support/iTerm2/Scripts/AutoLaunch/now-playing.py
+./install.sh
 ```
 
 ## Development
