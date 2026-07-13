@@ -32,7 +32,7 @@ _Enables Spotify track information in the iTerm2 status bar._
 ## Installation
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jackrayner/iterm2-spotify-nowplaying/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/jackrayner/iterm2-spotify-nowplaying/main/install.sh | bash
 ```
 
 Then restart iTerm2 to load the script.
